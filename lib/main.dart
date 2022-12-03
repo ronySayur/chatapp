@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 import 'utils/error_page.dart';
 import 'utils/loading_page.dart';
+import 'utils/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,26 +20,31 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
-  MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _initialization,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return ErrorPage();
+          return ErrorScreen();
         }
-
         if (snapshot.connectionState == ConnectionState.done) {
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: "ChatApp",
-            initialRoute: AppPages.INITIAL,
-            getPages: AppPages.routes,
+          return FutureBuilder(
+            future: Future.delayed(Duration(seconds: 3)),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return GetMaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: "ChatApp",
+                  initialRoute: AppPages.INITIAL,
+                  getPages: AppPages.routes,
+                );
+              }
+              return SplashScreen();
+            },
           );
         }
-        return LoadingPage();
+        return LoadingScreen();
       },
     );
   }

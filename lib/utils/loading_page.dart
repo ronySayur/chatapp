@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class LoadingPage extends StatelessWidget {
-  const LoadingPage({super.key});
-
+class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      // ignore: prefer_const_constructors
+    return MaterialApp(
       home: Scaffold(
-        body: const Center(
+        body: Center(
           child: CircularProgressIndicator(),
         ),
       ),
