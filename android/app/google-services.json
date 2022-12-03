@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "199936839516",
+    "firebase_url": "https://chat-app-rony-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "chat-app-rony",
+    "storage_bucket": "chat-app-rony.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199936839516:android:29af7b6f64196e5627fb99",
+        "android_client_info": {
+          "package_name": "com.ronycompnysayurcode.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "199936839516-qgs1djpdhokt046inih6f4juvacnrdcf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ronycompnysayurcode.chatapp",
+            "certificate_hash": "3334d8638d7c8c072d0632577ee6b806cd50ba71"
+          }
+        },
+        {
+          "client_id": "199936839516-is720jp7elbgvinp4kkufq6crp951bn6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1QpLXw_pRTa-PellpjSR9BRyTp6o3Z1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "199936839516-is720jp7elbgvinp4kkufq6crp951bn6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
