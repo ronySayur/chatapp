@@ -53,9 +53,10 @@ class wDimension {
 class wBigText extends StatelessWidget {
   wBigText({
     super.key,
-    this.color = const Color.fromARGB(0, 0, 0, 0),
+    this.color = const Color(0xFF1e81b0),
     required this.text,
     this.size = 0,
+    this.weight = FontWeight.normal,
     this.overflow = TextOverflow.ellipsis,
   });
 
@@ -63,6 +64,7 @@ class wBigText extends StatelessWidget {
   TextOverflow overflow;
   double size;
   final String text;
+  FontWeight weight;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,7 @@ class wBigText extends StatelessWidget {
       style: TextStyle(
         color: color,
         fontSize: size == 0 ? wDimension.font20 : size,
-        fontWeight: FontWeight.w400,
+        fontWeight: weight,
       ),
     );
   }
@@ -83,7 +85,7 @@ class wSmallText extends StatelessWidget {
   wSmallText({
     super.key,
     required this.text,
-    this.color = const Color.fromARGB(0, 0, 0, 0),
+    this.color = const Color(0xFF1e81b0),
     this.size = 12,
     this.height = 1.2,
   });
