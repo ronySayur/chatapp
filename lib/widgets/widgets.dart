@@ -22,6 +22,9 @@ class wDimension {
   static double height20 = screenHeight / 42.2;
   static double height30 = screenHeight / 28.13;
   static double height45 = screenHeight / 18.76;
+
+  static double heightSetengah = screenHeight * 0.5;
+
   static double iconSize16 = screenHeight / 52.75;
 //ukuran icon
   static double iconSize24 = screenHeight / 35.17;
@@ -47,6 +50,7 @@ class wDimension {
   static double width15 = screenHeight / 56.27;
   static double width20 = screenHeight / 42.2;
   static double width30 = screenHeight / 28.13;
+  static double widthSetengah = screenHeight * 0.5;
 }
 
 // ignore: must_be_immutable
