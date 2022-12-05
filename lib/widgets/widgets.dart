@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class wDimension {
+  static double screenHeight = Get.context!.height;
+  static double screenWidth = Get.context!.width;
 //ukuran bottomview
   static double bottomHeightBar = screenHeight / 7.03;
 
@@ -38,8 +40,7 @@ class wDimension {
 
   static double radius20 = screenHeight / 42.2;
   static double radius30 = screenHeight / 28.13;
-  static double screenHeight = Get.context!.height;
-  static double screenWidth = Get.context!.width;
+
 //Lebar
   static double width10 = screenHeight / 84.4;
 
