@@ -89,12 +89,14 @@ class wSmallText extends StatelessWidget {
   wSmallText({
     super.key,
     required this.text,
+    this.weight = FontWeight.normal,
     this.color = const Color(0xFF1e81b0),
     this.size = 12,
     this.height = 1.2,
   });
 
   Color? color;
+  FontWeight weight;
   double height;
   double size;
   final String text;
@@ -108,6 +110,7 @@ class wSmallText extends StatelessWidget {
         color: color,
         fontSize: size,
         height: height,
+        fontWeight: weight,
       ),
     );
   }
