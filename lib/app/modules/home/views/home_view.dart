@@ -41,10 +41,10 @@ class HomeView extends GetView<HomeController> {
             elevation: 5,
             child: Container(
               margin: EdgeInsets.only(top: context.mediaQueryPadding.top),
-              decoration: BoxDecoration(
-                border: const Border(bottom: BorderSide(color: Colors.black38)),
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.black38)),
               ),
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -58,8 +58,10 @@ class HomeView extends GetView<HomeController> {
                     borderRadius: BorderRadius.circular(50),
                     child: InkWell(
                       onTap: () => Get.toNamed(Routes.PROFILE),
+                      // ignore: prefer_const_constructors
                       child: Padding(
                         padding: const EdgeInsets.all(5),
+                        // ignore: prefer_const_constructors
                         child: wAppIcon(
                           icon: Icons.person,
                           iconColor: Colors.white,
@@ -82,12 +84,13 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        onPressed: () => Get.toNamed(Routes.SEARCH),
+        backgroundColor: Colors.red[900],
+        // ignore: prefer_const_constructors
         child: wAppIcon(
           icon: Icons.search,
           size: 35,
         ),
-        onPressed: () => Get.toNamed(Routes.SEARCH),
-        backgroundColor: Colors.red[900],
       ),
     );
   }

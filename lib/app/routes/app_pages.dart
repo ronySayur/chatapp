@@ -36,7 +36,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () => const ProfileView(),
+      page: () => ProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
@@ -46,7 +46,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEARCH,
-      page: () => const SearchView(),
+      page: () => SearchView(),
       binding: SearchBinding(),
     ),
   ];
