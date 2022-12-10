@@ -45,121 +45,138 @@ class ChatRoomView extends GetView<ChatRoomController> {
           ],
         ),
       ),
-      body: Column(
-        children: [
-          //body main chat
-          Expanded(
-            child: ListView(
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                //body single chat
-                const ItemChat(isSender: true),
-                const ItemChat(isSender: false),
-              ],
+      body: WillPopScope(
+        onWillPop: () {
+          if (controller.isShowEmoji.isTrue) {
+            controller.isShowEmoji.value = false;
+          } else {
+            Navigator.pop(context);
+          }
+          return Future.value(false);
+        },
+        child: Column(
+          children: [
+            //body main chat
+            Expanded(
+              child: ListView(
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  //body single chat
+                  const ItemChat(isSender: true),
+                  const ItemChat(isSender: false),
+                ],
+              ),
             ),
-          ),
 
-          //Bottom in send text
-          Container(
-            margin: EdgeInsets.only(
-                bottom: controller.isShowEmoji.isTrue
-                    ? wDimension.height10 / 2
-                    : context.mediaQueryPadding.bottom),
-            padding: EdgeInsets.symmetric(
-                horizontal: wDimension.width10,
-                vertical: wDimension.height10 / 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                    child: TextField(
-                  controller: controller.chatC,
-                  focusNode: controller.focusNode,
-                  decoration: InputDecoration(
-                    prefixIcon: IconButton(
-                      onPressed: () {
-                        controller.focusNode.unfocus();
-                        controller.isShowEmoji.toggle();
-                      },
-                      // ignore: prefer_const_constructors
-                      icon: wAppIcon(
-                        icon: Icons.emoji_emotions_outlined,
-                        iconColor: Colors.grey,
+            //Bottom in send text
+            Container(
+              margin: EdgeInsets.only(
+                  bottom: controller.isShowEmoji.isTrue
+                      ? wDimension.height10
+                      : context.mediaQueryPadding.bottom),
+              padding: EdgeInsets.symmetric(horizontal: wDimension.width10 / 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                      child: TextField(
+                    style: TextStyle(fontSize: wDimension.font26),
+                    controller: controller.chatC,
+                    focusNode: controller.focusNode,
+                    decoration: InputDecoration(
+                      prefixIcon: IconButton(
+                        onPressed: () {
+                          controller.focusNode.unfocus();
+                          controller.isShowEmoji.toggle();
+                        },
+                        icon: controller.isShowEmoji.isTrue
+                            ? wAppIcon(
+                                icon: Icons.emoji_emotions_outlined,
+                                iconColor: Colors.blueAccent,
+                                size: wDimension.iconSize24,
+                              )
+                            : wAppIcon(
+                                icon: Icons.emoji_emotions,
+                                iconColor: Colors.grey,
+                                size: wDimension.iconSize24,
+                              ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(wDimension.radius30),
                       ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(wDimension.radius30 * 10),
-                    ),
-                  ),
-                )),
-                SizedBox(width: wDimension.width10),
-                Material(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(wDimension.radius30 * 10),
-                  child: InkWell(
-                    borderRadius:
-                        BorderRadius.circular(wDimension.radius30 * 20),
-                    onTap: () {},
-                    child: Padding(
-                      padding: EdgeInsets.all(wDimension.width15 / 3),
-                      child: wAppIcon(
-                        icon: Icons.send,
-                        iconSize: wDimension.iconSize24,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+                  )),
+                  SizedBox(width: wDimension.width10),
 
-          //Emoji
-
-          Obx(
-            () => (controller.isShowEmoji.isTrue)
-                ? SizedBox(
-                    height: wDimension.height30 * 10,
-                    child: EmojiPicker(
-                      onEmojiSelected: (category, emoji) {
-                        controller.addEmojiToChat(emoji);
-                      },
-                      onBackspacePressed: () {
-                        controller.deleteEmoji();
-                      },
-                      // ignore: prefer_const_constructors
-                      config: Config(
-                        columns: 7,
-                        verticalSpacing: 0,
-                        horizontalSpacing: 0,
-                        gridPadding: EdgeInsets.zero,
-                        initCategory: Category.RECENT,
-                        bgColor: const Color(0xFFF2F2F2),
-                        indicatorColor: const Color(0xFFB71C1C),
-                        iconColor: Colors.grey,
-                        iconColorSelected: const Color(0xFFB71C1C),
-                        backspaceColor: const Color(0xFFB71C1C),
-                        skinToneDialogBgColor: Colors.white,
-                        skinToneIndicatorColor: Colors.grey,
-                        enableSkinTones: true,
-                        showRecentsTab: true,
-                        recentsLimit: 28,
-                        noRecents: const Text(
-                          'No Recents',
-                          style: TextStyle(fontSize: 20, color: Colors.black26),
-                          textAlign: TextAlign.center,
-                        ), // Needs to be const Widget
-                        loadingIndicator:
-                            const SizedBox.shrink(), // Needs to be const Widget
-                        tabIndicatorAnimDuration: kTabScrollDuration,
-                        categoryIcons: const CategoryIcons(),
-                        buttonMode: ButtonMode.MATERIAL,
+                  //button
+                  Material(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(wDimension.radius30),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(wDimension.radius30),
+                      onTap: () {},
+                      child: Padding(
+                        padding: EdgeInsets.all(wDimension.width15 / 3),
+                        child: wAppIcon(
+                          icon: Icons.send,
+                          iconSize: wDimension.iconSize24,
+                        ),
                       ),
                     ),
                   )
-                : SizedBox(height: wDimension.height10),
-          ),
-        ],
+                ],
+              ),
+            ),
+
+            //Emoji
+
+            Obx(
+              () => (controller.isShowEmoji.isTrue)
+                  ? SizedBox(
+                      height: wDimension.height30 * 10,
+                      child: EmojiPicker(
+                        onEmojiSelected: (category, emoji) {
+                          controller.addEmojiToChat(emoji);
+                        },
+                        onBackspacePressed: () {
+                          controller.deleteEmoji();
+                        },
+                        // ignore: prefer_const_constructors
+                        config: Config(
+                          columns: 7,
+                          verticalSpacing: 0,
+                          horizontalSpacing: 0,
+                          gridPadding: EdgeInsets.zero,
+                          initCategory: Category.RECENT,
+                          bgColor: const Color(0xFFF2F2F2),
+                          indicatorColor: const Color(0xFFB71C1C),
+                          iconColor: Colors.grey,
+                          iconColorSelected: const Color(0xFFB71C1C),
+                          backspaceColor: const Color(0xFFB71C1C),
+                          skinToneDialogBgColor: Colors.white,
+                          skinToneIndicatorColor: Colors.grey,
+                          enableSkinTones: true,
+                          showRecentsTab: true,
+                          recentsLimit: 28,
+                          noRecents: const Text(
+                            'No Recents',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black26),
+                            textAlign: TextAlign.center,
+                          ), // Needs to be const Widget
+                          loadingIndicator: const SizedBox
+                              .shrink(), // Needs to be const Widget
+                          tabIndicatorAnimDuration: kTabScrollDuration,
+                          categoryIcons: const CategoryIcons(),
+                          buttonMode: ButtonMode.MATERIAL,
+                        ),
+                      ),
+                    )
+                  : SizedBox(height: wDimension.height10),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -205,7 +222,7 @@ class ItemChat extends StatelessWidget {
             ),
           ),
           SizedBox(height: wDimension.height10 / 5),
-          wSmallText(text: "01:00")
+          wSmallText(text: "01:00 PM")
         ],
       ),
     );
