@@ -151,38 +151,3 @@ class wAppIcon extends StatelessWidget {
     );
   }
 }
-
-//Widget Icon dan Text
-class wIconAndTextWidget extends StatelessWidget {
-  const wIconAndTextWidget({
-    Key? key,
-    required this.icon,
-    required this.text,
-    this.size = 40,
-    this.iconSize = 24,
-    this.backgroundColor = const Color.fromARGB(0, 255, 255, 255),
-    this.iconColor = const Color.fromARGB(255, 255, 255, 255),
-  }) : super(key: key);
-
-  final IconData icon;
-  final Color iconColor;
-  final String text;
-  final Color backgroundColor;
-  final double iconSize;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: iconColor,
-          size: iconSize,
-        ),
-        const SizedBox(width: 5),
-        wSmallText(text: text),
-      ],
-    );
-  }
-}
