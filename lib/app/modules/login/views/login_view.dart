@@ -1,3 +1,4 @@
+import 'package:chatapp/app/controllers/auth_controller.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -7,46 +8,50 @@ import 'package:lottie/lottie.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
-  const LoginView({Key? key}) : super(key: key);
+  final authC = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: EdgeInsets.all(wDimension.height30),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: wDimension.widthSetengah,
                 height: wDimension.heightSetengah,
                 child: Lottie.asset("assets/lottie/login.json"),
               ),
-              const SizedBox(width: 0.0, height: 150),
+              SizedBox(height: wDimension.height30 * 5),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),
                   backgroundColor: Colors.red[900],
-                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  padding: EdgeInsets.symmetric(vertical: wDimension.height15),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(wDimension.radius30 * 5),
+                      ),
                       width: wDimension.width30,
                       height: wDimension.height30,
                       child: Image.asset("assets/logo/google.png"),
                     ),
-                    const SizedBox(width: 15, height: 0.0),
+                    SizedBox(width: wDimension.width15),
                     wBigText(
                       text: "Sign in with google",
                       color: Colors.white,
                     ),
                   ],
                 ),
-                onPressed: () {},
+                onPressed: () => authC.login(),
               )
             ],
           ),

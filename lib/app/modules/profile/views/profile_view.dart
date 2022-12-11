@@ -1,12 +1,15 @@
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:chatapp/app/controllers/auth_controller.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
+  final authC = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,18 +17,20 @@ class ProfileView extends GetView<ProfileController> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: () {},
-          icon: const wAppIcon(
+          onPressed: () => Get.back(),
+          icon: wAppIcon(
             icon: Icons.arrow_back,
             iconColor: Colors.black,
+            size: wDimension.iconSize24,
           ),
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () => authC.logout(),
               icon: wAppIcon(
                 icon: Icons.logout,
                 iconColor: Colors.black,
+                size: wDimension.iconSize24,
               ))
         ],
       ),
@@ -36,9 +41,9 @@ class ProfileView extends GetView<ProfileController> {
               AvatarGlow(
                 endRadius: 110,
                 glowColor: Colors.blue,
-                duration: Duration(seconds: 3),
+                duration: const Duration(seconds: 3),
                 child: Container(
-                  margin: EdgeInsets.all(20),
+                  margin: EdgeInsets.all(wDimension.height20),
                   width: wDimension.widthSetengah / 3,
                   height: wDimension.heightSetengah / 3,
                   decoration: BoxDecoration(
@@ -65,46 +70,62 @@ class ProfileView extends GetView<ProfileController> {
                   color: Colors.black54),
             ]),
           ),
-          SizedBox(height: 20),
+
+          //
+          SizedBox(height: wDimension.height20),
+
+          //
           Expanded(
-            child: Container(
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {},
-                    leading: wAppIcon(
-                        icon: Icons.note_add_outlined,
-                        iconColor: Colors.black54),
-                    title: wBigText(
-                      text: "Update Status",
-                      color: Colors.black54,
-                    ),
-                    trailing: wAppIcon(
-                        icon: Icons.arrow_right, iconColor: Colors.black54),
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: () => Get.toNamed(Routes.UPDATE_STATUS),
+                  leading: wAppIcon(
+                    icon: Icons.note_add_outlined,
+                    iconColor: Colors.black54,
+                    size: wDimension.font20,
                   ),
-                  ListTile(
-                    onTap: () {},
-                    leading:
-                        wAppIcon(icon: Icons.person, iconColor: Colors.black54),
-                    title: wBigText(
-                      text: "Change Profile",
-                      color: Colors.black54,
-                    ),
-                    trailing: wAppIcon(
-                        icon: Icons.arrow_right, iconColor: Colors.black54),
+                  title: wBigText(
+                    text: "Update Status",
+                    color: Colors.black54,
                   ),
-                  ListTile(
-                    onTap: () {},
-                    leading: wAppIcon(
-                        icon: Icons.color_lens, iconColor: Colors.black54),
-                    title: wBigText(
-                      text: "Change Theme",
-                      color: Colors.black54,
-                    ),
-                    trailing: wBigText(text: "Light"),
+                  trailing: wAppIcon(
+                    icon: Icons.arrow_right,
+                    iconColor: Colors.black54,
+                    size: wDimension.iconSize24,
                   ),
-                ],
-              ),
+                ),
+                ListTile(
+                  onTap: () => Get.toNamed(Routes.CHANGE_PROFILE),
+                  leading: wAppIcon(
+                    icon: Icons.person,
+                    iconColor: Colors.black54,
+                    size: wDimension.iconSize24,
+                  ),
+                  title: wBigText(
+                    text: "Change Profile",
+                    color: Colors.black54,
+                  ),
+                  trailing: wAppIcon(
+                    icon: Icons.arrow_right,
+                    iconColor: Colors.black54,
+                    size: wDimension.iconSize24,
+                  ),
+                ),
+                ListTile(
+                  onTap: () => Get.toNamed(Routes.CHANGE_PROFILE),
+                  leading: wAppIcon(
+                    icon: Icons.color_lens,
+                    iconColor: Colors.black54,
+                    size: wDimension.iconSize24,
+                  ),
+                  title: wBigText(
+                    text: "Change Theme",
+                    color: Colors.black54,
+                  ),
+                  trailing: wBigText(text: "Light"),
+                ),
+              ],
             ),
           ),
           Container(
@@ -112,7 +133,6 @@ class ProfileView extends GetView<ProfileController> {
                 EdgeInsets.only(bottom: context.mediaQueryPadding.bottom + 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              // ignore: prefer_const_literals_to_create_immutables
               children: [
                 wSmallText(text: "Chat App", color: Colors.black54),
                 wSmallText(text: "v 1.0", color: Colors.black54),

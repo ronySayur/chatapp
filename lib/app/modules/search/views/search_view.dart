@@ -33,12 +33,11 @@ class SearchView extends GetView<SearchController> {
     ),
   );
 
-  SearchView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        // ignore: sort_child_properties_last
+        preferredSize: Size.fromHeight(wDimension.height30 * 4.25),
         child: AppBar(
           backgroundColor: Colors.red[900],
           title: wBigText(
@@ -48,31 +47,38 @@ class SearchView extends GetView<SearchController> {
           centerTitle: true,
           leading: IconButton(
             onPressed: () => Get.back(),
-            icon: const wAppIcon(icon: Icons.arrow_back),
+            icon: wAppIcon(
+              icon: Icons.arrow_back,
+              size: wDimension.iconSize24,
+            ),
           ),
           flexibleSpace: Padding(
-            padding: const EdgeInsets.fromLTRB(30, 50, 20, 20),
+            padding: EdgeInsets.fromLTRB(
+              wDimension.height30,
+              wDimension.height10 * 5,
+              wDimension.height20,
+              wDimension.height20,
+            ),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: TextField(
+                controller: controller.searchC,
                 cursorColor: Colors.red[900],
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(wDimension.height45),
-                    // ignore: prefer_const_constructors
                     borderSide: BorderSide(
                       color: Colors.white,
-                      width: 1,
+                      width: wDimension.width10 / 10,
                     ),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(wDimension.height45),
-                    // ignore: prefer_const_constructors
                     borderSide: BorderSide(
                       color: Colors.white,
-                      width: 1,
+                      width: wDimension.width10 / 10,
                     ),
                   ),
                   hintText: "Search friend",
@@ -82,10 +88,10 @@ class SearchView extends GetView<SearchController> {
                   suffixIcon: InkWell(
                     onTap: () {},
                     borderRadius: BorderRadius.circular(wDimension.height45),
-                    // ignore: prefer_const_constructors
                     child: wAppIcon(
                       icon: Icons.search,
                       iconColor: Colors.red,
+                      size: wDimension.iconSize24,
                     ),
                   ),
                 ),
@@ -93,14 +99,13 @@ class SearchView extends GetView<SearchController> {
             ),
           ),
         ),
-        preferredSize: Size.fromHeight(wDimension.height30 * 4.25),
       ),
-      body: friends.length == 0
+      body: friends.isEmpty
           ? Center(
               child: Container(
                 width: wDimension.screenWidth * 0.7,
                 height: wDimension.screenHeight * 0.7,
-                child: Lottie.asset("assets/lottie//empty.json"),
+                child: Lottie.asset("assets/lottie/empty.json"),
               ),
             )
           : ListView.builder(

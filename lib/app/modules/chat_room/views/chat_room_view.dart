@@ -1,9 +1,8 @@
-import 'package:chatapp/widgets/widgets.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
+import '../../../../widgets/widgets.dart';
 import '../controllers/chat_room_controller.dart';
 
 class ChatRoomView extends GetView<ChatRoomController> {
