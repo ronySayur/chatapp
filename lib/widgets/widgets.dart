@@ -86,28 +86,33 @@ class wBigText extends StatelessWidget {
 
 // ignore: must_be_immutable
 class wSmallText extends StatelessWidget {
-  wSmallText({
-    super.key,
-    required this.text,
-    this.color = const Color(0xFF1e81b0),
-    this.size = 12,
-    this.height = 1.2,
-  });
+  wSmallText(
+      {super.key,
+      required this.text,
+      this.weight = FontWeight.normal,
+      this.color = const Color(0xFF1e81b0),
+      this.size = 12,
+      this.height = 1.2,
+      this.textalign = TextAlign.start});
 
   Color? color;
+  FontWeight weight;
   double height;
   double size;
   final String text;
+  TextAlign textalign;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
+      textAlign: textalign,
       maxLines: 1,
       style: TextStyle(
         color: color,
         fontSize: size,
         height: height,
+        fontWeight: weight,
       ),
     );
   }
@@ -124,9 +129,9 @@ class wAppIcon extends StatelessWidget {
     this.iconSize = 24,
   }) : super(key: key);
 
-  final Color backgroundColor;
   final IconData icon;
   final Color iconColor;
+  final Color backgroundColor;
   final double iconSize;
   final double size;
 
@@ -143,31 +148,6 @@ class wAppIcon extends StatelessWidget {
         color: iconColor,
         size: iconSize,
       ),
-    );
-  }
-}
-
-//Widget Icon dan Text
-class wIconAndTextWidget extends StatelessWidget {
-  const wIconAndTextWidget(
-      {Key? key,
-      required this.icon,
-      required this.text,
-      required this.iconColor})
-      : super(key: key);
-
-  final IconData icon;
-  final Color iconColor;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, color: iconColor, size: wDimension.iconSize24),
-        const SizedBox(width: 5),
-        wSmallText(text: text),
-      ],
     );
   }
 }
