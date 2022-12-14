@@ -17,7 +17,7 @@ class IntroductionView extends GetView<IntroductionController> {
       pages: [
         PageViewModel(
           title: "Berinteraksi dengan mudah",
-          body: "HALLLELUYAAAAA",
+          body: "Selamat datang di aplikasi chat kami!",
           image: Container(
             width: Get.width * 0.6,
             height: Get.width * 0.6,
@@ -27,8 +27,8 @@ class IntroductionView extends GetView<IntroductionController> {
           ),
         ),
         PageViewModel(
-          title: "Hallleeee....",
-          body: "LUUUUUUU.....",
+          title: "Berkomunikasi dengan teman",
+          body: "Kami sangat senang bisa menjadi bagian dari komunikasi Anda.",
           image: Container(
             width: Get.width * 0.6,
             height: Get.width * 0.6,
@@ -38,8 +38,9 @@ class IntroductionView extends GetView<IntroductionController> {
           ),
         ),
         PageViewModel(
-          title: "YAAAAAAAA....",
-          body: "AAAAAAAAA.....",
+          title: "Berbagi keceriaan dengan pasangan anda",
+          body:
+              "Kami senang bisa membantu Anda dalam hal apa pun yang dibutuhkan.",
           image: Container(
             width: Get.width * 0.6,
             height: Get.width * 0.6,
