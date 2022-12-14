@@ -36,8 +36,8 @@ class ProfileView extends GetView<ProfileController> {
       ),
       body: Column(
         children: [
-          Container(
-            child: Column(children: [
+          Column(
+            children: [
               AvatarGlow(
                 endRadius: 110,
                 glowColor: Colors.blue,
@@ -46,29 +46,34 @@ class ProfileView extends GetView<ProfileController> {
                   margin: EdgeInsets.all(wDimension.height20),
                   width: wDimension.widthSetengah / 3,
                   height: wDimension.heightSetengah / 3,
-                  decoration: BoxDecoration(
-                    color: Colors.black38,
-                    borderRadius:
-                        BorderRadius.circular(wDimension.radius30 * 10),
-                    image: DecorationImage(
-                      image: AssetImage("assets/logo/noimage.png"),
-                      fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      wDimension.radius30 * 5,
                     ),
+                    child: authC.user.photoUrl == "noimage"
+                        ? Image.asset(
+                            "assets/logo/noimage.png",
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            authC.user.photoUrl!,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
               ),
               wSmallText(
-                  text: "Lorem Ipsum",
+                  text: "${authC.user.name}",
                   textalign: TextAlign.center,
                   weight: FontWeight.bold,
                   size: wDimension.font20,
                   color: Colors.black54),
               wSmallText(
-                  text: "Lorem Ipsum@gmail.com",
+                  text: "${authC.user.email}",
                   textalign: TextAlign.center,
                   size: wDimension.font16,
                   color: Colors.black54),
-            ]),
+            ],
           ),
 
           //
