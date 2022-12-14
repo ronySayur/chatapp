@@ -50,26 +50,28 @@ class ProfileView extends GetView<ProfileController> {
                     borderRadius: BorderRadius.circular(
                       wDimension.radius30 * 5,
                     ),
-                    child: authC.user.photoUrl == "noimage"
+                    child: authC.user.value.photoUrl == "noimage"
                         ? Image.asset(
                             "assets/logo/noimage.png",
                             fit: BoxFit.cover,
                           )
                         : Image.network(
-                            authC.user.photoUrl!,
+                            authC.user.value.photoUrl!,
                             fit: BoxFit.cover,
                           ),
                   ),
                 ),
               ),
+              Obx(
+                () => wSmallText(
+                    text: "${authC.user.value.name}",
+                    textalign: TextAlign.center,
+                    weight: FontWeight.bold,
+                    size: wDimension.font20,
+                    color: Colors.black54),
+              ),
               wSmallText(
-                  text: "${authC.user.name}",
-                  textalign: TextAlign.center,
-                  weight: FontWeight.bold,
-                  size: wDimension.font20,
-                  color: Colors.black54),
-              wSmallText(
-                  text: "${authC.user.email}",
+                  text: "${authC.user.value.email}",
                   textalign: TextAlign.center,
                   size: wDimension.font16,
                   color: Colors.black54),

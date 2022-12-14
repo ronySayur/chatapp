@@ -1,6 +1,8 @@
 import 'package:chatapp/app/data/models/user_model.dart';
+import 'package:chatapp/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,7 +17,7 @@ class AuthController extends GetxController {
   GoogleSignInAccount? _currentUser;
   UserCredential? userCredential;
 
-  UserModel user = UserModel();
+  var user = UserModel().obs;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -74,7 +76,7 @@ class AuthController extends GetxController {
         final currUser = await users.doc(_currentUser!.email).get();
         final currUserData = currUser.data() as Map<String, dynamic>;
 
-        user = UserModel(
+        user(UserModel(
           name: currUserData['name'],
           email: currUserData['email'],
           photoUrl: currUserData['photoUrl'],
@@ -82,7 +84,7 @@ class AuthController extends GetxController {
           creationTime: currUserData['creationTime'],
           lastSignInTime: currUserData['lastSignInTime'],
           updatedTime: currUserData['updatedTime'],
-        );
+        ));
 
         return true;
       }
@@ -153,7 +155,7 @@ class AuthController extends GetxController {
         final currUser = await users.doc(_currentUser!.email).get();
         final currUserData = currUser.data() as Map<String, dynamic>;
 
-        user = UserModel(
+        user(UserModel(
           name: currUserData['name'],
           email: currUserData['email'],
           photoUrl: currUserData['photoUrl'],
@@ -161,7 +163,7 @@ class AuthController extends GetxController {
           creationTime: currUserData['creationTime'],
           lastSignInTime: currUserData['lastSignInTime'],
           updatedTime: currUserData['updatedTime'],
-        );
+        ));
 
         //
         isAuth.value = true;
@@ -176,5 +178,74 @@ class AuthController extends GetxController {
     await _googleSignIn.disconnect();
     await _googleSignIn.signOut();
     Get.offAllNamed(Routes.LOGIN);
+  }
+
+//Profile
+  Future<void> changeProfile(String name, String status) async {
+    //update firebase
+    CollectionReference users = firestore.collection('users');
+    String date = DateTime.now().toIso8601String();
+
+    //panggil
+    users.doc(_currentUser!.email).update({
+      "name": name,
+      "status": status,
+      "lastSignTime":
+          userCredential!.user!.metadata.lastSignInTime!.toIso8601String(),
+      "updatedTime": date,
+    });
+
+    //update model
+    user.update((user) {
+      user!.name = name;
+      user.status = status;
+      user.lastSignInTime =
+          userCredential!.user!.metadata.lastSignInTime!.toIso8601String();
+      user.updatedTime = date;
+    });
+
+    user.refresh();
+    Get.defaultDialog(
+      title: "Succes",
+      middleText: "Change Profile success",
+      radius: wDimension.radius20,
+      contentPadding: EdgeInsets.all(wDimension.radius15 / 2),
+    );
+    await Future.delayed(const Duration(seconds: 2));
+    Get.back();
+    Get.back();
+  }
+
+  Future<void> updateStatus(String status) async {
+    //update firebase
+    CollectionReference users = firestore.collection('users');
+    String date = DateTime.now().toIso8601String();
+
+    //panggil
+    users.doc(_currentUser!.email).update({
+      "status": status,
+      "lastSignTime":
+          userCredential!.user!.metadata.lastSignInTime!.toIso8601String(),
+      "updatedTime": date,
+    });
+
+    //update model
+    user.update((user) {
+      user!.status = status;
+      user.lastSignInTime =
+          userCredential!.user!.metadata.lastSignInTime!.toIso8601String();
+      user.updatedTime = date;
+    });
+
+    user.refresh();
+    Get.defaultDialog(
+      title: "Succes",
+      middleText: "Update Status success",
+      radius: wDimension.radius20,
+      contentPadding: EdgeInsets.all(wDimension.radius15 / 2),
+    );
+    await Future.delayed(const Duration(seconds: 2));
+    Get.back();
+    Get.back();
   }
 }
