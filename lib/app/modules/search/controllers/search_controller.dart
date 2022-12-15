@@ -27,15 +27,10 @@ class SearchController extends GetxController {
           for (int i = 0; i < keyNameResult.docs.length; i++) {
             queryAwal.add(keyNameResult.docs[i].data() as Map<String, dynamic>);
           }
-
-          print("Querry Result : ");
-          print(queryAwal);
-        } else {
-          print("tidak ada data");
-        }
+        } else {}
       }
 
-      if (queryAwal.length != 0) {
+      if (queryAwal.isNotEmpty) {
         tempSearch.value = [];
         queryAwal.forEach((element) {
           if (element["name"].startsWith(capitalized)) {

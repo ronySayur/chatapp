@@ -1,0 +1,26 @@
+{
+    "connections": [
+        "rizkypratama218@gmail.com",
+        "fiti@gmai.com"
+    ],
+    "total_chats": 10,
+    "total_read": 8,
+    "total_unread": 2,
+    "chat": [
+        {
+            "pengirim": "rizkypratama218@gmail.com",
+            "penerima": "fiti@gmail.com",
+            "pesan": "pesan untuk fiti",
+            "time": "2022-12-14T18:58:23.997747",
+            "isRead": true
+        },
+        {
+            "pengirim": "fiti@gmail.com",
+            "penerima": "rizkypratama218@gmail.com",
+            "pesan": "pesan untuk rony",
+            "time": "2022-12-14T18:58:23.997747",
+            "isRead": true
+        }
+    ],
+    "lastTime": "2022-12-14T18:58:23.997747"
+}
