@@ -75,27 +75,29 @@ class SearchView extends GetView<SearchController> {
                 padding: EdgeInsets.zero,
                 itemCount: controller.tempSearch.length,
                 itemBuilder: (context, index) => ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.black26,
-                    child: Image.asset(
-                      "assets/logo/noimage.png",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  title: wBigText(
-                    text: "${controller.tempSearch[index]["name"]}",
-                    weight: FontWeight.w600,
-                    size: wDimension.font20,
-                  ),
-                  subtitle: wSmallText(
-                    text: "${controller.tempSearch[index]["email"]}",
-                    size: wDimension.font16,
-                  ),
-                  trailing: GestureDetector(
-                      onTap: () => Get.toNamed(Routes.CHAT_ROOM),
-                      child: Chip(label: wSmallText(text: "Kirim Pesan"))),
-                ),
-              )));
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: wDimension.width10,
+                          vertical: wDimension.height10),
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: Colors.black26,
+                        child: Image.asset(
+                          "assets/logo/noimage.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: wBigText(
+                        text: "${controller.tempSearch[index]["name"]}",
+                        weight: FontWeight.w600,
+                        size: wDimension.font20,
+                      ),
+                      subtitle: wSmallText(
+                        text: "${controller.tempSearch[index]["email"]}",
+                        size: wDimension.font16,
+                      ),
+                      trailing: GestureDetector(
+                          onTap: () => Get.toNamed(Routes.CHAT_ROOM),
+                          child: Chip(label: wSmallText(text: "Kirim Pesan"))),
+                    ))));
   }
 }

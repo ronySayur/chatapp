@@ -1,0 +1,23 @@
+{
+    "uid": "IR7p1Cx0tZPjhqFZWUeWgqwPTjy1",
+    "name": "Rizky Pratama",
+    "email": "rizkypratama218@gmail.com",
+    "keyName": "R",
+    "creationTime": "2022-12-14T08:54:29.204Z",
+    "lastSignInTime": "2022-12-15T11:23:59.512Z",
+    "photoUrl": "https://lh3.googleusercontent.com/a/AEdFTp5gkVHELUv1lo5b5H6OzVDVzwyzj2Gb8PJoDIz9xg=s96-c",
+    "status": "",
+    "updatedTime": "2022-12-14T18:58:23.997747",
+    "chats": [
+        {
+            "connection": "fiti@gmail.com",
+            "chat_id": "1ji33p1o2j3oihd021hiads",
+            "lastTime": "2022-12-14T18:58:23.997747"
+        },
+        {
+            "connection": "rizkypratama218@gmail.com",
+            "chat_id": "sadiuasdcoaishdqw9021",
+            "lastTime": "2022-12-14T18:58:23.997747"
+        }
+    ]
+}
