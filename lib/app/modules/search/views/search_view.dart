@@ -91,7 +91,8 @@ class SearchView extends GetView<SearchController> {
                         text: "${controller.tempSearch[index]["email"]}",
                         size: wDimension.font16),
                     trailing: GestureDetector(
-                        onTap: () => Get.toNamed(Routes.CHAT_ROOM),
+                        onTap: () => authC.addNewConnection(
+                            controller.tempSearch[index]["email"]),
                         child:
                             Chip(label: wSmallText(text: "Kirim Pesan")))))));
   }

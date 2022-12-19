@@ -242,4 +242,47 @@ class AuthController extends GetxController {
     Get.back();
     Get.back();
   }
+
+//Search
+  Future<void> addNewConnection(String friendEmail) async {
+    String date = DateTime.now().toIso8601String();
+    CollectionReference chats = firestore.collection("chats");
+
+    final newChatDoc = await chats.add({
+      "connection": [
+        _currentUser!.email,
+        friendEmail,
+      ],
+      "total_chats": 0,
+      "total_read": 0,
+      "total_unread": 0,
+      "chats": [],
+      "lastTime": date,
+    });
+
+    CollectionReference users = firestore.collection("users");
+    users.doc(_currentUser!.email).update({
+      "chats": [
+        {
+          "connection": friendEmail,
+          "chat_id": newChatDoc.id,
+          "lastTime": date,
+        }
+      ]
+    });
+
+    user.update((user) {
+      user!.chats = [
+        ChatUser(
+          chatId: newChatDoc.id,
+          connection: friendEmail,
+          lastTime: date,
+        )
+      ];
+    });
+
+    user.refresh();
+
+    Get.toNamed(Routes.CHAT_ROOM);
+  }
 }
