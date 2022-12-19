@@ -10,7 +10,7 @@ class SearchController extends GetxController {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<void> searchFriend(String data) async {
+  Future<void> searchFriend(String data, String email) async {
     if (data.isEmpty) {
       queryAwal.value = [];
       tempSearch.value = [];
@@ -21,6 +21,7 @@ class SearchController extends GetxController {
         CollectionReference clients = firestore.collection("users");
         final keyNameResult = await clients
             .where("keyName", isEqualTo: data.substring(0, 1).toUpperCase())
+            .where("email", isNotEqualTo: email)
             .get();
 
         if (keyNameResult.docs.isNotEmpty) {

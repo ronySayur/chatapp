@@ -21,6 +21,7 @@ class AuthController extends GetxController {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+//First Initial
   Future<void> firstInitialized() async {
     await autoLogin().then((value) {
       if (value) {
@@ -36,6 +37,7 @@ class AuthController extends GetxController {
     });
   }
 
+//Skip Introduction
   Future<bool> skipIntro() async {
     final box = GetStorage();
 
@@ -45,6 +47,7 @@ class AuthController extends GetxController {
     return false;
   }
 
+//AutoLogin
   Future<bool> autoLogin() async {
     //mengubah isAuth => true => autologin
     try {
@@ -68,7 +71,7 @@ class AuthController extends GetxController {
         //masukan data ke firebase
         CollectionReference users = firestore.collection('users');
 
-        users.doc(_currentUser!.email).update({
+        await users.doc(_currentUser!.email).update({
           "lastSignInTime":
               userCredential!.user!.metadata.lastSignInTime!.toIso8601String()
         });
@@ -76,16 +79,7 @@ class AuthController extends GetxController {
         final currUser = await users.doc(_currentUser!.email).get();
         final currUserData = currUser.data() as Map<String, dynamic>;
 
-        user(UsersModel(
-          name: currUserData['name'],
-          keyName: currUserData['keyName'],
-          email: currUserData['email'],
-          photoUrl: currUserData['photoUrl'],
-          status: currUserData['status'],
-          creationTime: currUserData['creationTime'],
-          lastSignInTime: currUserData['lastSignInTime'],
-          updatedTime: currUserData['updatedTime'],
-        ));
+        user(UsersModel.fromJson(currUserData));
 
         return true;
       }
@@ -95,6 +89,7 @@ class AuthController extends GetxController {
     }
   }
 
+//Login
   Future<void> login() async {
     try {
       //handle kebocoran data user sebelum login
@@ -134,7 +129,7 @@ class AuthController extends GetxController {
         final checkUser = await users.doc(_currentUser!.email).get();
 
         if (checkUser.data() == null) {
-          users.doc(_currentUser!.email).set({
+          await users.doc(_currentUser!.email).set({
             "uid": userCredential!.user!.uid,
             "name": _currentUser!.displayName,
             "keyName": _currentUser!.displayName!.substring(0, 1).toUpperCase(),
@@ -146,9 +141,10 @@ class AuthController extends GetxController {
             "lastSignInTime": userCredential!.user!.metadata.lastSignInTime!
                 .toIso8601String(),
             "updatedTime": DateTime.now().toIso8601String(),
+            "chats": [],
           });
         } else {
-          users.doc(_currentUser!.email).update({
+          await users.doc(_currentUser!.email).update({
             "lastSignInTime":
                 userCredential!.user!.metadata.lastSignInTime!.toIso8601String()
           });
@@ -157,16 +153,7 @@ class AuthController extends GetxController {
         final currUser = await users.doc(_currentUser!.email).get();
         final currUserData = currUser.data() as Map<String, dynamic>;
 
-        user(UsersModel(
-          name: currUserData['name'],
-          keyName: currUserData['keyName'],
-          email: currUserData['email'],
-          photoUrl: currUserData['photoUrl'],
-          status: currUserData['status'],
-          creationTime: currUserData['creationTime'],
-          lastSignInTime: currUserData['lastSignInTime'],
-          updatedTime: currUserData['updatedTime'],
-        ));
+        user(UsersModel.fromJson(currUserData));
 
         //
         isAuth.value = true;
@@ -177,13 +164,14 @@ class AuthController extends GetxController {
     }
   }
 
+//Logout
   Future<void> logout() async {
     await _googleSignIn.disconnect();
     await _googleSignIn.signOut();
     Get.offAllNamed(Routes.LOGIN);
   }
 
-//Profile
+//Change Profile
   Future<void> changeProfile(String name, String status) async {
     //update firebase
     CollectionReference users = firestore.collection('users');
@@ -221,6 +209,7 @@ class AuthController extends GetxController {
     Get.back();
   }
 
+//Update Status
   Future<void> updateStatus(String status) async {
     //update firebase
     CollectionReference users = firestore.collection('users');
