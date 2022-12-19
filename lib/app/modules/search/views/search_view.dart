@@ -1,3 +1,4 @@
+import 'package:chatapp/app/controllers/auth_controller.dart';
 import 'package:chatapp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import '../../../routes/app_pages.dart';
 import '../controllers/search_controller.dart';
 
 class SearchView extends GetView<SearchController> {
+  final authC = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,8 +33,8 @@ class SearchView extends GetView<SearchController> {
                     child: Align(
                         alignment: Alignment.bottomCenter,
                         child: TextField(
-                            onChanged: (value) =>
-                                controller.searchFriend(value),
+                            onChanged: (value) => controller.searchFriend(
+                                value, authC.user.value.email!),
                             controller: controller.searchC,
                             cursorColor: Colors.red[900],
                             decoration: InputDecoration(
@@ -75,26 +77,22 @@ class SearchView extends GetView<SearchController> {
                 padding: EdgeInsets.zero,
                 itemCount: controller.tempSearch.length,
                 itemBuilder: (context, index) => ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: Colors.black26,
-                        child: Image.asset(
-                          "assets/logo/noimage.png",
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      title: wBigText(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.black26,
+                      child: Image.asset("assets/logo/noimage.png",
+                          fit: BoxFit.cover),
+                    ),
+                    title: wBigText(
                         text: "${controller.tempSearch[index]["name"]}",
                         weight: FontWeight.w600,
-                        size: wDimension.font20,
-                      ),
-                      subtitle: wSmallText(
+                        size: wDimension.font20),
+                    subtitle: wSmallText(
                         text: "${controller.tempSearch[index]["email"]}",
-                        size: wDimension.font16,
-                      ),
-                      trailing: GestureDetector(
-                          onTap: () => Get.toNamed(Routes.CHAT_ROOM),
-                          child: Chip(label: wSmallText(text: "Kirim Pesan"))),
-                    ))));
+                        size: wDimension.font16),
+                    trailing: GestureDetector(
+                        onTap: () => Get.toNamed(Routes.CHAT_ROOM),
+                        child:
+                            Chip(label: wSmallText(text: "Kirim Pesan")))))));
   }
 }
