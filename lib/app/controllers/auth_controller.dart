@@ -107,9 +107,7 @@ class AuthController extends GetxController {
         final googleAuth = await _currentUser!.authentication;
 
         final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
+            idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
         await FirebaseAuth.instance
             .signInWithCredential(credential)
@@ -160,7 +158,7 @@ class AuthController extends GetxController {
         Get.offAllNamed(Routes.HOME);
       } else {}
     } catch (error) {
-      print(error);
+      Get.defaultDialog(title: "Error", middleText: "$error");
     }
   }
 
@@ -251,12 +249,14 @@ class AuthController extends GetxController {
     CollectionReference users = firestore.collection("users");
 
     final docUser = await users.doc(_currentUser!.email).get();
+
     final docChats = (docUser.data() as Map<String, dynamic>)["chats"] as List;
+    // ignore: prefer_typing_uninitialized_variables
     var chat_id;
 
-    if (docChats.isNotEmpty) {
+    if (docChats.length != 0) {
       docChats.forEach((singleChat) {
-        if (singleChat["connection"] == friendEmail) {
+        if (singleChat["connections"] == friendEmail) {
           chat_id = singleChat["chat_id"];
         }
       });
@@ -264,7 +264,6 @@ class AuthController extends GetxController {
       if (chat_id != null) {
         // 2. pernah chat
         flagNewConnection = false;
-        Get.toNamed(Routes.CHAT_ROOM, arguments: chat_id);
       } else {
         // 1. Belum pernah chat
         flagNewConnection = true;
@@ -275,40 +274,70 @@ class AuthController extends GetxController {
     }
 
     if (flagNewConnection) {
-      final newChatDoc = await chats.add({
-        "connection": [
-          _currentUser!.email,
-          friendEmail,
+      //cek dari chat collection => connection => mereka berdua
+      final chatDocs = await chats.where(
+        "connections",
+        whereIn: [
+          [
+            _currentUser!.email,
+            friendEmail,
+          ],
+          [
+            friendEmail,
+            _currentUser!.email,
+          ],
         ],
-        "total_chats": 0,
-        "total_read": 0,
-        "total_unread": 0,
-        "chats": [],
-        "lastTime": date,
-      });
+      ).get();
 
-      users.doc(_currentUser!.email).update({
-        "chats": [
-          {
-            "connection": friendEmail,
-            "chat_id": newChatDoc.id,
-            "lastTime": date,
-          }
-        ]
-      });
+      if (chatDocs.docs.length != 0) {
+        //terdapat chats
 
-      user.update((user) {
-        user!.chats = [
-          ChatUser(
-            chatId: newChatDoc.id,
-            connection: friendEmail,
-            lastTime: date,
-          )
-        ];
-      });
+        final chatDataID = chatDocs.docs[0].id;
+        final chatData = chatDocs.docs[0].data() as Map<String, dynamic>;
 
-      chat_id = newChatDoc.id;
-      user.refresh();
+        docChats.add({
+          "connections": friendEmail,
+          "chat_id": chatDataID,
+          "lastTime": chatData["lastTime"],
+          "total_unread": 0,
+        });
+
+        await users.doc(_currentUser!.email).update({"chats": docChats});
+
+        user.update((user) {
+          user!.chats = docChats.cast<ChatUser>();
+        });
+
+        chat_id = chatDataID;
+
+        user.refresh();
+      } else {
+        //buat baru
+        final newChatDoc = await chats.add({
+          "connections": [
+            _currentUser!.email,
+            friendEmail,
+          ],
+          "chats": [],
+        });
+
+        docChats.add({
+          "connections": friendEmail,
+          "chat_id": newChatDoc.id,
+          "lastTime": date,
+          "total_unread": 0,
+        });
+
+        await users.doc(_currentUser!.email).update({"chats": docChats});
+
+        user.update((user) {
+          user!.chats = docChats.cast<ChatUser>();
+        });
+
+        chat_id = newChatDoc.id;
+
+        user.refresh();
+      }
     }
     Get.toNamed(Routes.CHAT_ROOM, arguments: chat_id);
   }
