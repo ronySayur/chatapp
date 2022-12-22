@@ -10,14 +10,16 @@
     "updatedTime": "2022-12-14T18:58:23.997747",
     "chats": [
         {
-            "connection": "fiti@gmail.com",
+            "connections": "fiti@gmail.com",
             "chat_id": "1ji33p1o2j3oihd021hiads",
-            "lastTime": "2022-12-14T18:58:23.997747"
+            "lastTime": "2022-12-14T18:58:23.997747",
+            "total_unread": 0
         },
         {
-            "connection": "rizkypratama218@gmail.com",
+            "connections": "rizkypratama218@gmail.com",
             "chat_id": "sadiuasdcoaishdqw9021",
-            "lastTime": "2022-12-14T18:58:23.997747"
+            "lastTime": "2022-12-14T18:58:23.997747",
+            "total_unread": 0
         }
     ]
 }

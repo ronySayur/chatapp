@@ -107,9 +107,7 @@ class AuthController extends GetxController {
         final googleAuth = await _currentUser!.authentication;
 
         final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
+            idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
         await FirebaseAuth.instance
             .signInWithCredential(credential)
@@ -160,7 +158,7 @@ class AuthController extends GetxController {
         Get.offAllNamed(Routes.HOME);
       } else {}
     } catch (error) {
-      print(error);
+      Get.defaultDialog(title: "Error", middleText: "$error");
     }
   }
 
@@ -241,5 +239,106 @@ class AuthController extends GetxController {
     await Future.delayed(const Duration(seconds: 2));
     Get.back();
     Get.back();
+  }
+
+//Search
+  Future<void> addNewConnection(String friendEmail) async {
+    bool flagNewConnection = false;
+    String date = DateTime.now().toIso8601String();
+    CollectionReference chats = firestore.collection("chats");
+    CollectionReference users = firestore.collection("users");
+
+    final docUser = await users.doc(_currentUser!.email).get();
+
+    final docChats = (docUser.data() as Map<String, dynamic>)["chats"] as List;
+    // ignore: prefer_typing_uninitialized_variables
+    var chat_id;
+
+    if (docChats.length != 0) {
+      docChats.forEach((singleChat) {
+        if (singleChat["connections"] == friendEmail) {
+          chat_id = singleChat["chat_id"];
+        }
+      });
+
+      if (chat_id != null) {
+        // 2. pernah chat
+        flagNewConnection = false;
+      } else {
+        // 1. Belum pernah chat
+        flagNewConnection = true;
+      }
+    } else {
+      // 1. Belum pernah chat
+      flagNewConnection = true;
+    }
+
+    if (flagNewConnection) {
+      //cek dari chat collection => connection => mereka berdua
+      final chatDocs = await chats.where(
+        "connections",
+        whereIn: [
+          [
+            _currentUser!.email,
+            friendEmail,
+          ],
+          [
+            friendEmail,
+            _currentUser!.email,
+          ],
+        ],
+      ).get();
+
+      if (chatDocs.docs.length != 0) {
+        //terdapat chats
+
+        final chatDataID = chatDocs.docs[0].id;
+        final chatData = chatDocs.docs[0].data() as Map<String, dynamic>;
+
+        docChats.add({
+          "connections": friendEmail,
+          "chat_id": chatDataID,
+          "lastTime": chatData["lastTime"],
+          "total_unread": 0,
+        });
+
+        await users.doc(_currentUser!.email).update({"chats": docChats});
+
+        user.update((user) {
+          user!.chats = docChats.cast<ChatUser>();
+        });
+
+        chat_id = chatDataID;
+
+        user.refresh();
+      } else {
+        //buat baru
+        final newChatDoc = await chats.add({
+          "connections": [
+            _currentUser!.email,
+            friendEmail,
+          ],
+          "chats": [],
+        });
+
+        docChats.add({
+          "connections": friendEmail,
+          "chat_id": newChatDoc.id,
+          "lastTime": date,
+          "total_unread": 0,
+        });
+
+        await users.doc(_currentUser!.email).update({"chats": docChats});
+
+        user.update((user) {
+          user!.chats = docChats.cast<ChatUser>();
+        });
+
+        chat_id = newChatDoc.id;
+
+        user.refresh();
+      }
+    }
+    Get.toNamed(Routes.CHAT_ROOM, arguments: chat_id);
   }
 }

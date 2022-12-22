@@ -80,8 +80,20 @@ class SearchView extends GetView<SearchController> {
                     leading: CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.black26,
-                      child: Image.asset("assets/logo/noimage.png",
-                          fit: BoxFit.cover),
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(wDimension.radius30 * 5),
+                        child: controller.tempSearch[index]["photoUrl"] ==
+                                "noimage"
+                            ? Image.asset(
+                                "assets/logo/noimage.png",
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                controller.tempSearch[index]["photoUrl"],
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
                     title: wBigText(
                         text: "${controller.tempSearch[index]["name"]}",
@@ -91,7 +103,8 @@ class SearchView extends GetView<SearchController> {
                         text: "${controller.tempSearch[index]["email"]}",
                         size: wDimension.font16),
                     trailing: GestureDetector(
-                        onTap: () => Get.toNamed(Routes.CHAT_ROOM),
+                        onTap: () => authC.addNewConnection(
+                            controller.tempSearch[index]["email"]),
                         child:
                             Chip(label: wSmallText(text: "Kirim Pesan")))))));
   }
