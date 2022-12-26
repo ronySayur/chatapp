@@ -12,6 +12,11 @@ class ChatRoomController extends GetxController {
   late FocusNode focusNode;
   late TextEditingController chatC;
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamChats(String chat_id) {
+    CollectionReference chats = firestore.collection("chats");
+    return chats.doc(chat_id).collection("chats").orderBy("time").snapshots();
+  }
+
   void addEmojiToChat(Emoji emoji) {
     chatC.text = chatC.text + emoji.emoji;
   }
@@ -27,7 +32,7 @@ class ChatRoomController extends GetxController {
     String date = DateTime.now().toIso8601String();
 
     final newchat =
-        await chats.doc(argument["chat_id"]).collection("chat").add({
+        await chats.doc(argument["chat_id"]).collection("chats").add({
       "pengirim": email,
       "penerima": argument["friendEmail"],
       "msg": chat,
@@ -35,9 +40,11 @@ class ChatRoomController extends GetxController {
       "isRead": false,
     });
 
-    users.doc(email).collection("chats").doc(argument["chat_id"]).update({
-      "lastTime": date,
-    });
+    await users
+        .doc(email)
+        .collection("chats")
+        .doc(argument["chat_id"])
+        .update({"lastTime": date});
 
     final checkChatsFriend = await users
         .doc(argument["friendEmail"])
@@ -47,33 +54,33 @@ class ChatRoomController extends GetxController {
 
     //jika chat friend ada
     if (checkChatsFriend.exists) {
+      //first check total unread
+      final checkTotalUnread = await chats
+          .doc(argument["chat_id"])
+          .collection("chats")
+          .where("isRead", isEqualTo: false)
+          .where("pengirim", isEqualTo: email)
+          .get();
+
+      //total unread user
+      total_unread = checkTotalUnread.docs.length;
+
+      //exist on friend DB
       await users
           .doc(argument["friendEmail"])
           .collection("chats")
           .doc(argument["chat_id"])
-          .get()
-          .then((value) => total_unread = value.data()!["total_unread"] as int);
-      //update
-      await users
-          .doc(argument["friendEmail"])
-          .collection("chats") 
-          .doc(argument["chat_id"])
-          .update({
-        "lastTime": date,
-        "total_unread": total_unread+1,
-      });
+          .update({"lastTime": date, "total_unread": total_unread});
     } else {
-      //new for friends database
+      //didnt exist on friend DB
       await users
           .doc(argument["friendEmail"])
           .collection("chats")
           .doc(argument["chat_id"])
-          .set({
-        "connections": email,
-        "lastTime": date,
-        "total_unread": total_unread + 1,
-      });
+          .update({"lastTime": date, "total_unread": 1});
     }
+
+    chatC.clear();
   }
 
   @override

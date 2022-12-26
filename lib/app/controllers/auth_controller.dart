@@ -393,7 +393,7 @@ class AuthController extends GetxController {
           ]
         });
 
-        await chats.doc(newChatDoc.id).collection("chat");
+        await chats.doc(newChatDoc.id).collection("chats");
 
         await users
             .doc(_currentUser!.email)
@@ -436,6 +436,29 @@ class AuthController extends GetxController {
         user.refresh();
       }
     }
+    final updateStatusChat = await chats
+        .doc(chat_id)
+        .collection("chats")
+        .where("isRead", isEqualTo: false)
+        .where("penerima", isEqualTo: _currentUser!.email)
+        .get();
+
+    updateStatusChat.docs.forEach((element) async {
+      element.id;
+      await chats
+          .doc(chat_id)
+          .collection("chats")
+          .doc(element.id)
+          .update({"isRead": true});
+    });
+
+//merubah total unread
+    await users
+        .doc(_currentUser!.email)
+        .collection("chats")
+        .doc(chat_id)
+        .update({"total_unread": 0});
+
     Get.toNamed(Routes.CHAT_ROOM, arguments: {
       "chat_id": "$chat_id",
       "friendEmail": "$friendEmail",
