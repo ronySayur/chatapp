@@ -1,3 +1,4 @@
+import 'package:chatapp/app/controllers/auth_controller.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,8 +7,7 @@ import '../../../../widgets/widgets.dart';
 import '../controllers/chat_room_controller.dart';
 
 class ChatRoomView extends GetView<ChatRoomController> {
-  const ChatRoomView({Key? key}) : super(key: key);
-
+  final authC = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +114,11 @@ class ChatRoomView extends GetView<ChatRoomController> {
                     borderRadius: BorderRadius.circular(wDimension.radius30),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(wDimension.radius30),
-                      onTap: () {},
+                      onTap: () => controller.newChat(
+                        authC.user.value.email!,
+                        Get.arguments as Map<String, dynamic>,
+                        controller.chatC.text,
+                      ),
                       child: Padding(
                         padding: EdgeInsets.all(wDimension.width15 / 3),
                         child: wAppIcon(
@@ -129,7 +133,6 @@ class ChatRoomView extends GetView<ChatRoomController> {
             ),
 
             //Emoji
-
             Obx(
               () => (controller.isShowEmoji.isTrue)
                   ? SizedBox(

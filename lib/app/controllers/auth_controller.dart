@@ -86,7 +86,7 @@ class AuthController extends GetxController {
 
 //
         if (listChats.docs.isNotEmpty) {
-          List<ChatUser> dataListChats = List<ChatUser>.empty();
+          List<ChatUser> dataListChats = [];
           listChats.docs.forEach((element) {
             var dataDocChat = element.data();
             var dataDocChatId = element.id;
@@ -187,7 +187,7 @@ class AuthController extends GetxController {
 
 //
         if (listChats.docs.isNotEmpty) {
-          List<ChatUser> dataListChats = List<ChatUser>.empty();
+          List<ChatUser> dataListChats = [];
           listChats.docs.forEach((element) {
             var dataDocChat = element.data();
             var dataDocChatId = element.id;
@@ -299,6 +299,7 @@ class AuthController extends GetxController {
   Future<void> addNewConnection(String friendEmail) async {
     bool flagNewConnection = false;
     var chat_id;
+    var date = DateTime.now().toIso8601String();
     CollectionReference chats = firestore.collection("chats");
     CollectionReference users = firestore.collection("users");
 
@@ -317,9 +318,11 @@ class AuthController extends GetxController {
         chat_id = checkConnection.docs[0].id; //chat id dari chat collect
 
       } else {
+        //Sudah pernah chat
         flagNewConnection = true;
       }
     } else {
+      //Belum pernah chat = Buat koneksi
       flagNewConnection = true;
     }
 
@@ -387,9 +390,10 @@ class AuthController extends GetxController {
           "connections": [
             _currentUser!.email,
             friendEmail,
-          ],
-          "chats": [],
+          ]
         });
+
+        await chats.doc(newChatDoc.id).collection("chat");
 
         await users
             .doc(_currentUser!.email)
@@ -397,8 +401,8 @@ class AuthController extends GetxController {
             .doc(newChatDoc.id)
             .set({
           "connections": friendEmail,
-          "lastTime": DateTime.now().toIso8601String(),
-          "total_unread": 0,
+          "lastTime": date,
+          "total_unread": 0
         });
 
         final listChats =
@@ -432,6 +436,9 @@ class AuthController extends GetxController {
         user.refresh();
       }
     }
-    Get.toNamed(Routes.CHAT_ROOM, arguments: chat_id);
+    Get.toNamed(Routes.CHAT_ROOM, arguments: {
+      "chat_id": "$chat_id",
+      "friendEmail": "$friendEmail",
+    });
   }
 }
