@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chatapp/app/controllers/auth_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -14,38 +16,97 @@ class ChatRoomView extends GetView<ChatRoomController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        leadingWidth: wDimension.width20 * 4,
-        leading: InkWell(
-          onTap: () => Get.back(),
-          borderRadius: BorderRadius.circular(wDimension.radius30 * 10),
-          child: Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(width: wDimension.width10 / 2),
-                wAppIcon(icon: Icons.arrow_back, size: wDimension.iconSize16),
-                SizedBox(width: wDimension.width20 / 2),
-                CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  radius: wDimension.radius20,
-                  child: Image.asset("assets/logo/noimage.png"),
-                ),
-                SizedBox(width: wDimension.width10 / 2),
-              ],
+          backgroundColor: Colors.red,
+          leadingWidth: wDimension.width20 * 4,
+          leading: InkWell(
+            onTap: () => Get.back(),
+            borderRadius: BorderRadius.circular(wDimension.radius30 * 10),
+            child: Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(width: wDimension.width10 / 2),
+                  wAppIcon(icon: Icons.arrow_back, size: wDimension.iconSize16),
+                  SizedBox(width: wDimension.width20 / 2),
+                  CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    radius: wDimension.radius20,
+                    child: StreamBuilder<DocumentSnapshot<Object?>>(
+                      stream: controller.StreamFriendData((Get.arguments
+                          as Map<String, dynamic>)["friendEmail"]),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.active) {
+
+                          var dataFriend = snapshot.data!.data() as Map<String, dynamic>;
+
+                          if (dataFriend["photoUrl"] == "noimage") {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  wDimension.radius30 * 5),
+                              child: Image.asset("assets/logo/noimage.png",
+                                  fit: BoxFit.cover),
+                            );
+                          } else {
+                            return ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    wDimension.radius30 * 5),
+                                child: Image.network(dataFriend["photoUrl"],
+                                    fit: BoxFit.cover));
+                          }
+                        }
+                        return ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(wDimension.radius30 * 5),
+                            child: Image.asset("assets/logo/noimage.png",
+                                fit: BoxFit.cover));
+                      },
+                    ),
+                  ),
+                  SizedBox(width: wDimension.width10 / 2),
+                ],
+              ),
             ),
           ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            wBigText(
-                text: "Lorem", color: Colors.white, weight: FontWeight.w600),
-            wSmallText(text: "status Lorem", color: Colors.white),
-          ],
-        ),
-      ),
+          title: StreamBuilder<DocumentSnapshot<Object?>>(
+              stream: controller.StreamFriendData(
+                  (Get.arguments as Map<String, dynamic>)["friendEmail"]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  var dataFriend =
+                      snapshot.data!.data() as Map<String, dynamic>;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      wBigText(
+                        text: dataFriend["name"],
+                        color: Colors.white,
+                        weight: FontWeight.w600,
+                      ),
+                      wSmallText(
+                        text: dataFriend["status"],
+                        color: Colors.white,
+                      ),
+                    ],
+                  );
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    wBigText(
+                      text: "Loading...",
+                      color: Colors.white,
+                      weight: FontWeight.w600,
+                    ),
+                    wSmallText(
+                      text: "Loading...",
+                      color: Colors.white,
+                    ),
+                  ],
+                );
+              })),
       body: WillPopScope(
         onWillPop: () {
           if (controller.isShowEmoji.isTrue) {
@@ -65,13 +126,19 @@ class ChatRoomView extends GetView<ChatRoomController> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     var alldata = snapshot.data!.docs;
+                    Timer(
+                        Duration.zero,
+                        () => controller.scrollC.jumpTo(
+                            controller.scrollC.position.maxScrollExtent));
                     return ListView.builder(
+                      controller: controller.scrollC,
                       itemCount: alldata.length,
                       itemBuilder: (context, index) => ItemChat(
                         isSender: alldata[index]["pengirim"] ==
                                 authC.user.value.email!
                             ? true
                             : false,
+                        time: "${alldata[index]["time"]}",
                         msg: "${alldata[index]["msg"]}",
                       ),
                     );
@@ -95,6 +162,12 @@ class ChatRoomView extends GetView<ChatRoomController> {
                 children: [
                   Expanded(
                       child: TextField(
+                    autocorrect: false,
+                    onEditingComplete: () => controller.newChat(
+                      authC.user.value.email!,
+                      Get.arguments as Map<String, dynamic>,
+                      controller.chatC.text,
+                    ),
                     style: TextStyle(fontSize: wDimension.font26),
                     controller: controller.chatC,
                     focusNode: controller.focusNode,
@@ -206,10 +279,12 @@ class ItemChat extends StatelessWidget {
     Key? key,
     required this.isSender,
     required this.msg,
+    required this.time,
   }) : super(key: key);
 
   final bool isSender;
   final String msg;
+  final String time;
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +318,7 @@ class ItemChat extends StatelessWidget {
             ),
           ),
           SizedBox(height: wDimension.height10 / 5),
-          wSmallText(text: "01:00 PM")
+          wSmallText(text: "${DateTime.parse(time)}")
         ],
       ),
     );

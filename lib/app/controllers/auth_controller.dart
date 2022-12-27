@@ -10,14 +10,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../routes/app_pages.dart';
 
 class AuthController extends GetxController {
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-  var isAuth = false.obs;
   var isSkipIntro = false.obs;
-  var user = UsersModel().obs;
+  var isAuth = false.obs;
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignInAccount? _currentUser;
   UserCredential? userCredential;
 
-  GoogleSignInAccount? _currentUser;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  var user = UsersModel().obs;
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 //First Initial
   Future<void> firstInitialized() async {
@@ -459,9 +461,7 @@ class AuthController extends GetxController {
         .doc(chat_id)
         .update({"total_unread": 0});
 
-    Get.toNamed(Routes.CHAT_ROOM, arguments: {
-      "chat_id": "$chat_id",
-      "friendEmail": "$friendEmail",
-    });
+    Get.toNamed(Routes.CHAT_ROOM,
+        arguments: {"chat_id": "$chat_id", "friendEmail": friendEmail});
   }
 }
