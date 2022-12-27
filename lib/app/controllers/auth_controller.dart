@@ -260,7 +260,6 @@ class AuthController extends GetxController {
     );
     await Future.delayed(const Duration(seconds: 2));
     Get.back();
-    Get.back();
   }
 
 //Update Status
@@ -294,7 +293,6 @@ class AuthController extends GetxController {
     );
     await Future.delayed(const Duration(seconds: 2));
     Get.back();
-    Get.back();
   }
 
 //addNewConnection
@@ -302,6 +300,7 @@ class AuthController extends GetxController {
     bool flagNewConnection = false;
     var chat_id;
     var date = DateTime.now().toIso8601String();
+    
     CollectionReference chats = firestore.collection("chats");
     CollectionReference users = firestore.collection("users");
 

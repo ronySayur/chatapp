@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ChatRoomController extends GetxController {
   var isShowEmoji = false.obs;
@@ -20,7 +21,7 @@ class ChatRoomController extends GetxController {
     return chats.doc(chat_id).collection("chats").orderBy("time").snapshots();
   }
 
-  Stream<DocumentSnapshot<Object?>> StreamFriendData(String friendEmail) {
+  Stream<DocumentSnapshot<Object?>> streamFriendData(String friendEmail) {
     CollectionReference users = firestore.collection("users");
     return users.doc(friendEmail).snapshots();
   }
@@ -33,11 +34,11 @@ class ChatRoomController extends GetxController {
     chatC.text = chatC.text.substring(0, chatC.text.length - 2);
   }
 
-  Future<void> newChat(
-      String email, Map<String, dynamic> argument, String chat) async {
+  void newChat(String email, Map<String, dynamic> argument, String chat) async {
     if (chat != "") {
       CollectionReference chats = firestore.collection("chats");
       CollectionReference users = firestore.collection("users");
+
       String date = DateTime.now().toIso8601String();
 
       await chats.doc(argument["chat_id"]).collection("chats").add({
@@ -46,6 +47,7 @@ class ChatRoomController extends GetxController {
         "msg": chat,
         "time": date,
         "isRead": false,
+        "groupTime": DateFormat.yMMMd('en_us').format(DateTime.parse(date))
       });
 
       Timer(
@@ -58,7 +60,9 @@ class ChatRoomController extends GetxController {
           .doc(email)
           .collection("chats")
           .doc(argument["chat_id"])
-          .update({"lastTime": date});
+          .update({
+        "lastTime": date,
+      });
 
       final checkChatsFriend = await users
           .doc(argument["friendEmail"])
@@ -91,7 +95,7 @@ class ChatRoomController extends GetxController {
             .doc(argument["friendEmail"])
             .collection("chats")
             .doc(argument["chat_id"])
-            .update({"lastTime": date, "total_unread": 1});
+            .set({"connections": email, "lastTime": date, "total_unread": 1});
       }
     }
   }
