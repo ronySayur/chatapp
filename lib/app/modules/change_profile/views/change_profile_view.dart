@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:chatapp/app/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
@@ -53,165 +55,199 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
         //
         body: Padding(
           padding: EdgeInsets.all(wDimension.height20),
-          child: ListView(
-            children: [
-              //
-              AvatarGlow(
-                endRadius: 75,
-                glowColor: Colors.blue,
-                duration: const Duration(seconds: 3),
-                child: Container(
-                  margin: EdgeInsets.all(wDimension.height20),
-                  width: wDimension.widthSetengah / 4,
-                  height: wDimension.heightSetengah / 4,
-                  child: Obx(() => ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          wDimension.radius30 * 5,
-                        ),
-                        child: authC.user.value.photoUrl == "noimage"
-                            ? Image.asset(
-                                "assets/logo/noimage.png",
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                authC.user.value.photoUrl!,
-                                fit: BoxFit.cover,
-                              ),
-                      )),
-                ),
-              ),
+          child: Expanded(
+            child: ListView(
+              children: [
+                //
+                AvatarGlow(
+                    endRadius: wDimension.radius15 * 6,
+                    glowColor: Colors.blue,
+                    duration: const Duration(seconds: 3),
+                    child: Container(
+                        margin: EdgeInsets.all(wDimension.height20),
+                        width: wDimension.widthSetengah / 4,
+                        height: wDimension.heightSetengah / 4,
+                        child: Obx(() => ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(wDimension.radius30 * 5),
+                            child: authC.user.value.photoUrl == "noimage"
+                                ? Image.asset("assets/logo/noimage.png",
+                                    fit: BoxFit.cover)
+                                : Image.network(authC.user.value.photoUrl!,
+                                    fit: BoxFit.cover))))),
 
-              //
-              SizedBox(height: wDimension.height20),
+                //
+                SizedBox(height: wDimension.height20),
 
-              //
-              TextField(
-                controller: controller.emailC,
-                readOnly: true,
-                textInputAction: TextInputAction.next,
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  labelStyle: TextStyle(
-                      color: Colors.black, fontSize: wDimension.font20),
-                  focusedBorder: OutlineInputBorder(
+                //
+                TextField(
+                  controller: controller.emailC,
+                  readOnly: true,
+                  textInputAction: TextInputAction.next,
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    labelStyle: TextStyle(
+                        color: Colors.black, fontSize: wDimension.font20),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(wDimension.radius30 * 10),
+                        borderSide: const BorderSide(color: Colors.red)),
+                    border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(wDimension.radius30 * 10),
-                      borderSide: const BorderSide(color: Colors.red)),
-                  border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(wDimension.radius30 * 10),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: wDimension.width30,
-                    vertical: wDimension.height15,
-                  ),
-                ),
-              ),
-
-              //
-              SizedBox(height: wDimension.height20),
-
-              //
-              TextField(
-                textInputAction: TextInputAction.next,
-                controller: controller.nameC,
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  labelText: "Name",
-                  labelStyle: const TextStyle(color: Colors.black),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(wDimension.radius30 * 10),
-                      borderSide: const BorderSide(color: Colors.red)),
-                  border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(wDimension.radius30 * 10),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: wDimension.width30,
-                    vertical: wDimension.height15,
-                  ),
-                ),
-              ),
-
-              //
-              SizedBox(height: wDimension.height20),
-
-              //
-              TextField(
-                controller: controller.statusC,
-                textInputAction: TextInputAction.done,
-                onEditingComplete: () {
-                                      authC.changeProfile(
-                      controller.nameC.text,
-                      controller.statusC.text,
-                    );
-                },
-                cursorColor: Colors.black,
-                decoration: InputDecoration(
-                  labelText: "Status",
-                  labelStyle: const TextStyle(color: Colors.black),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(wDimension.radius30 * 10),
-                      borderSide: const BorderSide(color: Colors.red)),
-                  border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(wDimension.radius30 * 10),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: wDimension.width30,
-                    vertical: wDimension.height15,
-                  ),
-                ),
-              ),
-              SizedBox(height: wDimension.height20),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: wDimension.width10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    wSmallText(text: "No image"),
-                    TextButton(
-                        onPressed: () {},
-                        child: wSmallText(
-                          text: "chosen..",
-                          weight: FontWeight.bold,
-                        ))
-                  ],
-                ),
-              ),
-
-              //
-              SizedBox(height: wDimension.height30),
-
-              //
-              SizedBox(
-                width: wDimension.screenWidth,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[900],
-                    shape: const StadiumBorder(),
-                    padding: EdgeInsets.symmetric(
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
                       horizontal: wDimension.width30,
                       vertical: wDimension.height15,
                     ),
                   ),
-                  onPressed: () {
+                ),
+
+                //
+                SizedBox(height: wDimension.height20),
+
+                //
+                TextField(
+                  textInputAction: TextInputAction.next,
+                  controller: controller.nameC,
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    labelText: "Name",
+                    labelStyle: const TextStyle(color: Colors.black),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(wDimension.radius30 * 10),
+                        borderSide: const BorderSide(color: Colors.red)),
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(wDimension.radius30 * 10),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: wDimension.width30,
+                      vertical: wDimension.height15,
+                    ),
+                  ),
+                ),
+
+                //
+                SizedBox(height: wDimension.height20),
+
+                //
+                TextField(
+                  controller: controller.statusC,
+                  textInputAction: TextInputAction.done,
+                  onEditingComplete: () {
                     authC.changeProfile(
                       controller.nameC.text,
                       controller.statusC.text,
                     );
                   },
-                  child: wSmallText(
-                    text: "Update",
-                    weight: FontWeight.bold,
-                    color: Colors.white,
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                    labelText: "Status",
+                    labelStyle: const TextStyle(color: Colors.black),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(wDimension.radius30 * 10),
+                        borderSide: const BorderSide(color: Colors.red)),
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(wDimension.radius30 * 10),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: wDimension.width30,
+                      vertical: wDimension.height15,
+                    ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height: wDimension.height20),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: wDimension.width10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GetBuilder<ChangeProfileController>(
+                          builder: (c) => c.pickedImage != null
+                              ? Column(
+                                  children: [
+                                    Container(
+                                        height: wDimension.height20 * 5,
+                                        width: wDimension.width20 * 5,
+                                        child: Stack(children: [
+                                          Container(
+                                              height: wDimension.height20 * 5,
+                                              width: wDimension.width20 * 5,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          wDimension.radius15 *
+                                                              5),
+                                                  image: DecorationImage(
+                                                      image: FileImage(File(
+                                                          c.pickedImage!.path)),
+                                                      fit: BoxFit.cover))),
+                                          Positioned(
+                                              top: -10,
+                                              right: -5,
+                                              child: IconButton(
+                                                  onPressed: () =>
+                                                      c.resetImage(),
+                                                  icon: wAppIcon(
+                                                    icon: Icons.delete,
+                                                    iconColor: Colors.redAccent,
+                                                    size: wDimension.iconSize16,
+                                                  )))
+                                        ])),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: wSmallText(
+                                          text: "upload",
+                                          weight: FontWeight.bold,
+                                        ))
+                                  ],
+                                )
+                              : wSmallText(text: "No image")),
+                      TextButton(
+                          onPressed: () => controller.selectImage(),
+                          child: wSmallText(
+                            text: "chosen..",
+                            weight: FontWeight.bold,
+                          ))
+                    ],
+                  ),
+                ),
+
+                //
+                SizedBox(height: wDimension.height30),
+
+                //
+                SizedBox(
+                  width: wDimension.screenWidth,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[900],
+                      shape: const StadiumBorder(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: wDimension.width30,
+                        vertical: wDimension.height15,
+                      ),
+                    ),
+                    onPressed: () {
+                      authC.changeProfile(
+                        controller.nameC.text,
+                        controller.statusC.text,
+                      );
+                    },
+                    child: wSmallText(
+                      text: "Update",
+                      weight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ));
   }
