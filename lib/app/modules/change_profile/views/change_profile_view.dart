@@ -139,9 +139,7 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                   textInputAction: TextInputAction.done,
                   onEditingComplete: () {
                     authC.changeProfile(
-                      controller.nameC.text,
-                      controller.statusC.text,
-                    );
+                        controller.nameC.text, controller.statusC.text);
                   },
                   cursorColor: Colors.black,
                   decoration: InputDecoration(
@@ -170,10 +168,11 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                       GetBuilder<ChangeProfileController>(
                           builder: (c) => c.pickedImage != null
                               ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                        height: wDimension.height20 * 5,
-                                        width: wDimension.width20 * 5,
+                                        height: wDimension.height20 * 6,
+                                        width: wDimension.width20 * 6,
                                         child: Stack(children: [
                                           Container(
                                               height: wDimension.height20 * 5,
@@ -188,19 +187,34 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                                                           c.pickedImage!.path)),
                                                       fit: BoxFit.cover))),
                                           Positioned(
-                                              top: -10,
-                                              right: -5,
+                                              top: -5,
+                                              right: 0,
                                               child: IconButton(
                                                   onPressed: () =>
                                                       c.resetImage(),
                                                   icon: wAppIcon(
-                                                    icon: Icons.delete,
-                                                    iconColor: Colors.redAccent,
-                                                    size: wDimension.iconSize16,
-                                                  )))
+                                                      icon: Icons.delete,
+                                                      iconColor: Colors.red,
+                                                      size: wDimension
+                                                              .iconSize24 *
+                                                          1.25,
+                                                      iconSize: wDimension
+                                                              .iconSize16 *
+                                                          1.25,
+                                                      backgroundColor:
+                                                          Colors.white)))
                                         ])),
                                     TextButton(
-                                        onPressed: () {},
+                                        onPressed: () => c
+                                                .uploadImage(
+                                                    authC.user.value.uid!)
+                                                .then((hasilKembalian) {
+                                              if (hasilKembalian != null) {
+                                                authC.updatePhotoUrl(
+                                                    hasilKembalian);
+                                              }
+                                              ;
+                                            }),
                                         child: wSmallText(
                                           text: "upload",
                                           weight: FontWeight.bold,

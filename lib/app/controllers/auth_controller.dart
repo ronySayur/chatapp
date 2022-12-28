@@ -258,7 +258,36 @@ class AuthController extends GetxController {
       radius: wDimension.radius20,
       contentPadding: EdgeInsets.all(wDimension.radius15 / 2),
     );
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
+    Get.back();
+  }
+
+//update PhotoUrl
+  Future<void> updatePhotoUrl(String url) async {
+    //update firebase
+    CollectionReference users = firestore.collection('users');
+    String date = DateTime.now().toIso8601String();
+
+    //panggil
+    await users.doc(_currentUser!.email).update({
+      "photoUrl": url,
+      "updatedTime": date,
+    });
+
+    //update model
+    user.update((user) {
+      user!.photoUrl = url;
+      user.updatedTime = date;
+    });
+
+    user.refresh();
+    Get.defaultDialog(
+      title: "Succes",
+      middleText: "Change Photo Profile  success",
+      radius: wDimension.radius20,
+      contentPadding: EdgeInsets.all(wDimension.radius15 / 2),
+    );
+    await Future.delayed(const Duration(seconds: 1));
     Get.back();
   }
 
@@ -291,7 +320,7 @@ class AuthController extends GetxController {
       radius: wDimension.radius20,
       contentPadding: EdgeInsets.all(wDimension.radius15 / 2),
     );
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     Get.back();
   }
 
@@ -300,7 +329,7 @@ class AuthController extends GetxController {
     bool flagNewConnection = false;
     var chat_id;
     var date = DateTime.now().toIso8601String();
-    
+
     CollectionReference chats = firestore.collection("chats");
     CollectionReference users = firestore.collection("users");
 
