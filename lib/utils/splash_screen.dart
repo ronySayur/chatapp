@@ -1,9 +1,10 @@
-import 'package:chatapp/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,7 +14,7 @@ class SplashScreen extends StatelessWidget {
           child: Container(
             width: Get.width * 0.7,
             height: Get.width * 0.7,
-            child: Lottie.asset("assets/lottie/hello.json"),
+            child: Lottie.asset("assets/lottie/loading-santa.json"),
           ),
         ),
       ),
