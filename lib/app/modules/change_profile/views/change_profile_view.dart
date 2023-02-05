@@ -168,7 +168,7 @@ class ChangeProfileView extends GetView<ChangeProfileController> {
                       GetBuilder<ChangeProfileController>(
                           builder: (c) => c.pickedImage != null
                               ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
                                         height: wDimension.height20 * 6,
