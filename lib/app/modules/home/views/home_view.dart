@@ -51,13 +51,11 @@ class HomeView extends GetView<HomeController> {
                       padding: EdgeInsets.zero,
                       itemCount: listDocsChats.length,
                       itemBuilder: (context, index) {
-                        return StreamBuilder<
-                            DocumentSnapshot<Map<String, dynamic>>>(
-                          stream: controller.friendStream(
-                              listDocsChats[index]["connections"]),
+
+                        return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                          stream: controller.friendStream(listDocsChats[index]["connections"]),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.active) {
+                            if (snapshot.connectionState ==ConnectionState.active) {
                               var data = snapshot.data!.data();
                               return data!["status"] == ""
                                   ? ListTile(

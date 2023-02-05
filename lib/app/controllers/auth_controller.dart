@@ -392,6 +392,7 @@ class AuthController extends GetxController {
 
         if (listChats.docs.isNotEmpty) {
           List<ChatUser> dataListChats = [];
+
           listChats.docs.forEach((element) {
             var dataDocChat = element.data();
             var dataDocChatId = element.id;
@@ -402,6 +403,7 @@ class AuthController extends GetxController {
               total_unread: dataDocChat["total_unread"],
             ));
           });
+
           user.update((val) {
             val!.chats = dataListChats;
           });
