@@ -17,9 +17,7 @@ class ChangeProfileController extends GetxController {
 
   Future<String?> uploadImage(String uid) async {
     Reference storageRef = storage.ref("$uid.png");
-
     File file = File(pickedImage!.path);
-
     try {
       await storageRef.putFile(file);
       final photoUrl = await storageRef.getDownloadURL();
@@ -40,7 +38,6 @@ class ChangeProfileController extends GetxController {
     try {
       final checkDataImage =
           await imagePicker.pickImage(source: ImageSource.gallery);
-
       if (checkDataImage != null) {
         pickedImage = checkDataImage;
       }
